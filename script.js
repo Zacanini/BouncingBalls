@@ -27,6 +27,20 @@ function Shape(x,y,velX,velY) {
   this.exists = true;
 }
 
+function EvilCircle(x,y,velX,velY) {
+  Shape.call(this,x,y,20,20);
+  this.color = 'white';
+  this.size = 20;
+}
+
+EvilCircle.prototype = Object.create(Shape.prototype);
+
+Object.defineProperty(EvilCircle.prototype, 'constructor',{
+  value: EvilCircle,
+  enumerable: false,
+  writable: true
+});
+
 function Ball(x,y,velX,velY,color,size){
   Shape.call(this,x,y,velX,velY);
   this.color = color;
@@ -40,7 +54,6 @@ Object.defineProperty(Ball.prototype, 'constructor',{
   enumerable: false,
   writable: true
 });
-
 
 Ball.prototype.draw = function () {
   ctx.beginPath();
