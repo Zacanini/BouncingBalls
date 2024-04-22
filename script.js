@@ -41,6 +41,35 @@ Object.defineProperty(EvilCircle.prototype, 'constructor',{
   writable: true
 });
 
+EvilCircle.prototype.draw = function () {
+  ctx.beginPath();
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = this.color;
+  ctx.arc(this.x,this.y,this.size,0, 2 * Math.PI);
+  ctx.stroke();
+}
+
+Ball.prototype.checkBounds = function () {
+
+  if ( (this.x + this.size) >= width ){
+    this.x -= this.size;
+  }
+
+  if ( (this.x + this.size) <= 0 ){
+    this.x += this.size;
+  }
+
+  if ( (this.y + this.size) >= height){
+    this.y -= this.size;
+  }
+
+  if ( (this.y + this.size) <= 0){
+    this.y += this.size;
+  }
+
+}
+
+
 function Ball(x,y,velX,velY,color,size){
   Shape.call(this,x,y,velX,velY);
   this.color = color;
