@@ -49,7 +49,7 @@ EvilCircle.prototype.draw = function () {
   ctx.stroke();
 }
 
-Ball.prototype.checkBounds = function () {
+EvilCircle.prototype.checkBounds = function () {
 
   if ( (this.x + this.size) >= width ){
     this.x -= this.size;
@@ -67,6 +67,44 @@ Ball.prototype.checkBounds = function () {
     this.y += this.size;
   }
 
+}
+
+EvilCircle.prototype.setControls = function (){
+  var _this = this;
+
+  window.onkeydown = function(e){
+    if(e.key === 'a'){
+      _this.x -= _this.velX;
+    } else if(e.key === 'd'){
+      _this.x += _this.velX;
+    } else if(e.key === 'w'){
+      _this.y -= _this.velY;
+    }else if(e.key === 's'){
+      _this.y += _this.velY;
+    }
+  }
+}
+
+
+EvilCircle.prototype.collisionDetect = function () {
+  
+  balls.forEach( vizinha => {
+    if (vizinha.exists) {
+      const dx = this.x - vizinha.x;
+      const dy = this.y - vizinha.y;
+      const distance = Math.sqrt(dx*dx+dy*dy);
+
+      if (distance < (this.size + vizinha.size)){
+        vizinha.exists = false;
+        count--;
+        para.textContent = `Ball count: ${count}`;
+        this.size++;
+      }
+      if(count === 0){
+        para.textContent = `Game Over`;
+      }
+    }
+  });
 }
 
 
@@ -119,7 +157,7 @@ Ball.prototype.update = function () {
 Ball.prototype.collisionDetect = function () {
   
   balls.forEach( vizinha => {
-    if (!(this === vizinha)){
+    if ((vizinha.exists) && !(this === vizinha)){
       const dx = this.x - vizinha.x;
       const dy = this.y - vizinha.y;
       const distance = Math.sqrt(dx*dx+dy*dy);
@@ -136,8 +174,10 @@ Ball.prototype.collisionDetect = function () {
 }
 
 let balls = [];
+let count = 50;
+let para = document.querySelector('h1');
 
-while (balls.length < 25) {
+while (balls.length < 50) {
 
   const size = random(10,20);
   const color = randomRGB();
@@ -150,19 +190,29 @@ while (balls.length < 25) {
     size
   );
 
+
   balls.push(ball);
   
 }
+
+let evil = new EvilCircle(random(0,width-10) , random(0,height-10));
+evil.setControls();
 
 function loop() {
   ctx.fillStyle = 'rgba(0,0,0,0.25)';
   ctx.fillRect(0,0,width,height);
 
   balls.forEach(ball =>{
+    if(ball.exists){
     ball.draw();
     ball.update();
     ball.collisionDetect();
+    }
   });
+
+  evil.draw();
+  evil.checkBounds();
+  evil.collisionDetect();
 
   requestAnimationFrame(loop);
 }
