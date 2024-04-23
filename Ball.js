@@ -53,5 +53,5 @@ class Ball extends Shape{
         }
       });
     }
-    
   }
+  

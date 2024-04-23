@@ -6,4 +6,4 @@ class Shape{
        this.velY = velY;
        this.exists = true;
      }
-   }
+}
